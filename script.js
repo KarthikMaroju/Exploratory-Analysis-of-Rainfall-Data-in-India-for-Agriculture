@@ -10,7 +10,7 @@ function login() {
     const username = document.getElementById("username").value;
     const password = document.getElementById("password").value;
 
-    if(username === "admin" && password === "1234") {
+    if(username === "LTVIP2026TMIDS43284" && password === "1234") {
         localStorage.setItem("loggedIn", "true");
         showApp();
     } else {
