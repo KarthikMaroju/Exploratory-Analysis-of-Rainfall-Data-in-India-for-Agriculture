@@ -1,40 +1,36 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Dashboard</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div class="toggle-container">
-    <button id="themeToggle">🌙</button>
+<h1>Rainfall Dashboard</h1>
+<button onclick="logout()">Logout</button>
+
+<div>
+<input id="year" placeholder="Year">
+<input id="amount" placeholder="Amount">
+<button onclick="addData()">Add</button>
+<button onclick="exportCSV()">Export CSV</button>
 </div>
 
-<div class="dashboard">
-    <h1>Welcome to Rainfall Dashboard</h1>
+<div id="analytics"></div>
 
-    <div class="card-container">
-        <div class="card">
-            <h3>Total Records</h3>
-            <p>120</p>
-        </div>
+<table>
+<thead>
+<tr>
+<th>Year</th>
+<th>Amount</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody id="table"></tbody>
+</table>
 
-        <div class="card">
-            <h3>Average Rainfall</h3>
-            <p>850 mm</p>
-        </div>
+<canvas id="chart"></canvas>
 
-        <div class="card">
-            <h3>Highest Rainfall</h3>
-            <p>1200 mm</p>
-        </div>
-    </div>
-
-    <button class="logout" onclick="logout()">Logout</button>
-</div>
-
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="script.js"></script>
 </body>
 </html>
