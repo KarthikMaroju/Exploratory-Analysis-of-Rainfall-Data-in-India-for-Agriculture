@@ -3,30 +3,60 @@
 <head>
     <title>Rainfall Analysis</title>
     <link rel="stylesheet" href="style.css">
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome Icons -->
+    <script src="https://kit.fontawesome.com/yourkitid.js" crossorigin="anonymous"></script>
 </head>
 <body>
 
-<h1>Exploratory Analysis of Rainfall Data in India</h1>
+<div class="container">
 
-<div id="loginSection">
-    <h2>Login</h2>
-    <input type="text" id="username" placeholder="Enter Username">
-    <input type="password" id="password" placeholder="Enter Password">
-    <button onclick="login()">Login</button>
-</div>
+    <h1 class="title">
+        <i class="fas fa-cloud-rain"></i>
+        Rainfall Data Analysis - India
+    </h1>
 
-<div id="appSection" style="display:none;">
-    <h2>Add Rainfall Data</h2>
+    <!-- LOGIN SECTION -->
+    <div id="loginSection" class="card">
+        <h2><i class="fas fa-user-lock"></i> Login</h2>
+        <input type="text" id="username" placeholder="Username">
+        <input type="password" id="password" placeholder="Password">
+        <button onclick="login()" class="btn-primary">
+            <i class="fas fa-sign-in-alt"></i> Login
+        </button>
+    </div>
 
-    <input type="text" id="state" placeholder="Enter State">
-    <input type="number" id="year" placeholder="Enter Year">
-    <input type="number" id="rainfall" placeholder="Enter Rainfall (mm)">
-    <button onclick="addRainfall()">Add Data</button>
+    <!-- APPLICATION SECTION -->
+    <div id="appSection" style="display:none;">
 
-    <h2>Rainfall Records</h2>
-    <div id="dataContainer"></div>
+        <div class="card">
+            <h2><i class="fas fa-plus-circle"></i> Add Rainfall Data</h2>
 
-    <button onclick="logout()">Logout</button>
+            <div class="input-group">
+                <input type="text" id="state" placeholder="State Name">
+                <input type="number" id="year" placeholder="Year">
+                <input type="number" id="rainfall" placeholder="Rainfall (mm)">
+            </div>
+
+            <button onclick="addRainfall()" class="btn-primary">
+                <i class="fas fa-database"></i> Add Data
+            </button>
+        </div>
+
+        <div class="card">
+            <h2><i class="fas fa-chart-bar"></i> Rainfall Records</h2>
+            <div id="dataContainer" class="data-box"></div>
+        </div>
+
+        <button onclick="logout()" class="btn-danger">
+            <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
+
+    </div>
+
 </div>
 
 <script src="script.js"></script>
