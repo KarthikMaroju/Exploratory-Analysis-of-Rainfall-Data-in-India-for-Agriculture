@@ -1,22 +1,19 @@
-const API_URL = "http://localhost:5000/api/rainfall";
-
-async function addRainfall() {
+function addRainfall() {
     const state = document.getElementById("state").value;
     const year = document.getElementById("year").value;
     const rainfall = document.getElementById("rainfall").value;
 
-    await fetch(API_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ state, year, rainfall })
-    });
+    let data = JSON.parse(localStorage.getItem("rainfallData")) || [];
+
+    data.push({ state, year, rainfall });
+
+    localStorage.setItem("rainfallData", JSON.stringify(data));
 
     getRainfall();
 }
 
-async function getRainfall() {
-    const response = await fetch(API_URL);
-    const data = await response.json();
+function getRainfall() {
+    let data = JSON.parse(localStorage.getItem("rainfallData")) || [];
 
     const container = document.getElementById("dataContainer");
     container.innerHTML = "";
