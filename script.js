@@ -1,115 +1,101 @@
-let token = localStorage.getItem("token");
+let chart;
 
-async function register(){
-const username=document.getElementById("ruser").value;
-const password=document.getElementById("rpass").value;
-const role=document.getElementById("role").value;
-
-await fetch("/api/auth/register",{
-method:"POST",
-headers:{"Content-Type":"application/json"},
-body:JSON.stringify({username,password,role})
-});
-alert("Registered");
-window.location="index.html";
-}
-
-async function login(){
-const username=document.getElementById("username").value;
-const password=document.getElementById("password").value;
-
-const res=await fetch("/api/auth/login",{
-method:"POST",
-headers:{"Content-Type":"application/json"},
-body:JSON.stringify({username,password})
-});
-
-const data=await res.json();
-if(data.token){
-localStorage.setItem("token",data.token);
-window.location="dashboard.html";
-}else{
-document.getElementById("error").innerText="Invalid Login";
-}
-}
-
-function logout(){
-localStorage.removeItem("token");
-window.location="index.html";
-}
-
+// Add Data
 async function addData(){
-await fetch("/api/rainfall/add",{
-method:"POST",
-headers:{
-"Content-Type":"application/json",
-"Authorization":localStorage.getItem("token")
-},
-body:JSON.stringify({
-year:document.getElementById("year").value,
-amount:document.getElementById("amount").value
-})
-});
-loadData();
+    const year = document.getElementById("year").value;
+    const amount = document.getElementById("amount").value;
+
+    await fetch("/api/rainfall/add",{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({year,amount})
+    });
+
+    loadData();
 }
 
+// Load All Data
 async function loadData(){
-const res=await fetch("/api/rainfall",{
-headers:{"Authorization":localStorage.getItem("token")}
-});
-const data=await res.json();
+    const res = await fetch("/api/rainfall");
+    const data = await res.json();
 
-let total=0;
-let table=document.getElementById("table");
-table.innerHTML="";
+    const table = document.getElementById("tableData");
+    table.innerHTML = "";
 
-data.forEach(d=>{
-total+=d.amount;
-table.innerHTML+=`
-<tr>
-<td>${d.year}</td>
-<td>${d.amount}</td>
-<td>
-<button onclick="deleteData('${d._id}')">Delete</button>
-</td>
-</tr>`;
-});
+    let total = 0;
+    let highest = 0;
+    let lowest = data[0] ? data[0].amount : 0;
 
-document.getElementById("analytics").innerHTML="Total Rainfall: "+total;
+    data.forEach(d=>{
+        total += d.amount;
+        if(d.amount > highest) highest = d.amount;
+        if(d.amount < lowest) lowest = d.amount;
 
-new Chart(document.getElementById("chart"),{
-type:"bar",
-data:{
-labels:data.map(d=>d.year),
-datasets:[{label:"Rainfall",data:data.map(d=>d.amount)}]
+        table.innerHTML += `
+            <tr>
+                <td>${d.year}</td>
+                <td>${d.amount}</td>
+                <td>
+                    <button onclick="editData('${d._id}',${d.year},${d.amount})">Edit</button>
+                    <button onclick="deleteData('${d._id}')">Delete</button>
+                </td>
+            </tr>
+        `;
+    });
+
+    const avg = data.length ? (total/data.length).toFixed(2) : 0;
+
+    document.getElementById("total").innerText = total;
+    document.getElementById("average").innerText = avg;
+    document.getElementById("highest").innerText = highest;
+    document.getElementById("lowest").innerText = lowest;
+
+    loadChart(data);
 }
-});
+
+// Edit Data
+async function editData(id,year,amount){
+    const newYear = prompt("Edit Year:",year);
+    const newAmount = prompt("Edit Amount:",amount);
+
+    await fetch(`/api/rainfall/update/${id}`,{
+        method:"PUT",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({year:newYear,amount:newAmount})
+    });
+
+    loadData();
 }
 
+// Delete Data
 async function deleteData(id){
-await fetch(`/api/rainfall/delete/${id}`,{
-method:"DELETE",
-headers:{"Authorization":localStorage.getItem("token")}
-});
-loadData();
+    await fetch(`/api/rainfall/delete/${id}`,{
+        method:"DELETE"
+    });
+
+    loadData();
 }
 
-function exportCSV(){
-let rows=document.querySelectorAll("table tr");
-let csv=[];
-rows.forEach(row=>{
-let cols=row.querySelectorAll("td,th");
-let rowData=[];
-cols.forEach(col=>rowData.push(col.innerText));
-csv.push(rowData.join(","));
-});
-let blob=new Blob([csv.join("\n")]);
-let a=document.createElement("a");
-a.href=URL.createObjectURL(blob);
-a.download="rainfall.csv";
-a.click();
+// Chart
+function loadChart(data){
+    const years = data.map(d=>d.year);
+    const amounts = data.map(d=>d.amount);
+
+    if(chart) chart.destroy();
+
+    chart = new Chart(document.getElementById("rainChart"),{
+        type:"bar",
+        data:{
+            labels:years,
+            datasets:[{
+                label:"Rainfall Analytics",
+                data:amounts,
+                backgroundColor:"rgba(54,162,235,0.6)"
+            }]
+        }
+    });
 }
 
 if(window.location.pathname.includes("dashboard")){
-loadData();
+    loadData();
 }
