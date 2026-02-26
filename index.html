@@ -1,31 +1,35 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Rainfall Analysis - Login</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rainfall Analysis</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div class="toggle-container">
-    <button id="themeToggle">🌙</button>
+<h1>Exploratory Analysis of Rainfall Data in India</h1>
+
+<div id="loginSection">
+    <h2>Login</h2>
+    <input type="text" id="username" placeholder="Enter Username">
+    <input type="password" id="password" placeholder="Enter Password">
+    <button onclick="login()">Login</button>
 </div>
 
-<div class="container">
-    <div class="login-box">
-        <h1>Rainfall Data Analysis</h1>
-        <p class="subtitle">Secure Login Portal</p>
+<div id="appSection" style="display:none;">
+    <h2>Add Rainfall Data</h2>
 
-        <input type="text" id="username" placeholder="Enter Username">
-        <input type="password" id="password" placeholder="Enter Password">
+    <input type="text" id="state" placeholder="Enter State">
+    <input type="number" id="year" placeholder="Enter Year">
+    <input type="number" id="rainfall" placeholder="Enter Rainfall (mm)">
+    <button onclick="addRainfall()">Add Data</button>
 
-        <button onclick="login()">Login</button>
+    <h2>Rainfall Records</h2>
+    <div id="dataContainer"></div>
 
-        <p id="error" class="error"></p>
-    </div>
+    <button onclick="logout()">Logout</button>
 </div>
 
 <script src="script.js"></script>
+
 </body>
 </html>
